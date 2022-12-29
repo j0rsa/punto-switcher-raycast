@@ -32,6 +32,7 @@ function switchStringLayout(string: string): string {
 
 // supports ABC, Russian
 async function switchLayout(target: string): Promise<void> {
+  await exec(`/bin/chmod u+x ${environment.assetsPath}/keyboardSwitcher`);
   const result = await exec(`${environment.assetsPath}/keyboardSwitcher select '${target}'`);
   const status = result.stdout.split("\n")[1];
   console.log(result.stdout);
