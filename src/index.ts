@@ -8,12 +8,16 @@ const exec = promisify(Exec);
 export default async function main() {
   // genMap();
   // return;
-  const input = await getSelectedText();
+  let input = ""
+  try {
+    input = await getSelectedText()
+  } catch (error) {}
+  
   const buf = Buffer.from(input, "utf8");
   const encodedInput = buf.toString("base64");
   // console.log(encodedInput);
 
-  if (encodedInput == "Cg==") {
+  if (input === "" || encodedInput === "Cg==") {
     await showHUD("Nothing to switch");
     return;
   }
