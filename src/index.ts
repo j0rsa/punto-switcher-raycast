@@ -8,11 +8,13 @@ const exec = promisify(Exec);
 export default async function main() {
   // genMap();
   // return;
-  let input = ""
+  let input = "";
   try {
-    input = await getSelectedText()
-  } catch (error) {}
-  
+    input = await getSelectedText();
+  } catch (error) {
+    console.log("unable to get selected text");
+  }
+
   const buf = Buffer.from(input, "utf8");
   const encodedInput = buf.toString("base64");
   // console.log(encodedInput);
@@ -22,7 +24,7 @@ export default async function main() {
     return;
   }
   const switched = switchStringLayout(input);
-  switchLayout(detectLayout(switched))
+  switchLayout(detectLayout(switched));
   // console.log(switched);
   // await Clipboard.copy(switched);
   await Clipboard.paste(switched);
@@ -38,8 +40,8 @@ function switchStringLayout(string: string): string {
 async function switchLayout(target: string): Promise<void> {
   await exec(`/bin/chmod u+x ${environment.assetsPath}/keyboardSwitcher`);
   const result = await exec(`${environment.assetsPath}/keyboardSwitcher select '${target}'`);
-  const status = result.stdout.split("\n")[1];
-  console.log(result.stdout);
+  result.stdout.split("\n")[1];
+  // console.log(result.stdout);
 
   // exec(`${environment.assetsPath}/keyboardSwitcher json`),
   // exec(`${environment.assetsPath}/keyboardSwitcher get`),
@@ -47,10 +49,10 @@ async function switchLayout(target: string): Promise<void> {
 
 function detectLayout(input: string): string {
   const array = input.split("");
-  const enChars = array.filter(c => en_ru.has(c)).length;
-  const ruChars = array.filter(c => ru_en.has(c)).length;
-  let targetLayout = ""
-  if(enChars > ruChars) {
+  const enChars = array.filter((c) => en_ru.has(c)).length;
+  const ruChars = array.filter((c) => ru_en.has(c)).length;
+  let targetLayout = "";
+  if (enChars > ruChars) {
     targetLayout = "ABC";
   } else {
     targetLayout = "Russian";
